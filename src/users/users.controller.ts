@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserDto } from './dto/user.dto';
+import { UserDto, UserSchema } from './dto/user.dto';
 import { User } from './schemas/user.schema';
 import { ObjectId } from 'mongoose';
+import { ZodValidationPipe } from './pipes/zodPipe';
 
 @Controller('users')
 export class UsersController {
@@ -10,7 +11,8 @@ export class UsersController {
     constructor(private userService: UsersService){}
 
     @Post()
-    create(@Body("user") userDto: UserDto): Promise<User>{
+    @UsePipes(new ZodValidationPipe(UserSchema))
+    create(@Body() userDto: UserDto): Promise<User>{
         return this.userService.create(userDto);
     }
 
@@ -25,6 +27,7 @@ export class UsersController {
     }
 
     @Put()
+    @UsePipes(new ZodValidationPipe(UserSchema))
     updateOne(@Body("user") userDto: UserDto): Promise<boolean>{
         return this.userService.updateOne(userDto);
     }
