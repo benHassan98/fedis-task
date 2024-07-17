@@ -22,18 +22,18 @@ export class UsersController {
     }
 
     @Get(":id")
-    findById(@Param("id") id: ObjectId): Promise<User>{
+    findById(@Param("id") id: string): Promise<User>{
         return this.userService.findById(id);
     }
 
     @Put()
     @UsePipes(new ZodValidationPipe(UserSchema))
-    updateOne(@Body("user") userDto: UserDto): Promise<boolean>{
+    updateOne(@Body() userDto: UserDto): Promise<User>{
         return this.userService.updateOne(userDto);
     }
 
     @Delete(":id")
-    deleteById(@Param("id") id: ObjectId): Promise<User>{
+    deleteById(@Param("id") id: string): Promise<User>{
         return this.userService.deleteById(id);
     }
 

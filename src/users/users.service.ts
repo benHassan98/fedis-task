@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId }  from 'mongoose';
 import {User} from "./schemas/user.schema";
 import { UserDto } from './dto/user.dto';
 
@@ -21,9 +21,15 @@ export class UsersService {
         return this.userModel.find().exec();
     }
 
-    async findById(id: ObjectId): Promise< User > {
-
-        const user = await this.userModel.findById(id);
+    async findById(id: string): Promise< User > {
+        
+        let user;
+        try{
+            user = await this.userModel.findById(id);
+        }
+        catch(err){
+            throw new BadRequestException("Bad id");
+        }
 
         if(!user){
             throw new NotFoundException("User not found");
@@ -31,22 +37,40 @@ export class UsersService {
         return user;
     }
 
-    async updateOne(userDto: UserDto): Promise<boolean>{
+    async updateOne(userDto: UserDto): Promise<User>{
         if(!userDto.id){
             throw new BadRequestException("Id should exist when updating user");
         }
 
-        const updatedUser = await this.userModel.updateOne({_id:userDto.id}, userDto);
-        return updatedUser.acknowledged;
+        let updatedUser;
+        try{
+            updatedUser = await this.userModel.findByIdAndUpdate(userDto.id, userDto);
+        }
+        catch(err){
+            throw new BadRequestException("Bad id");   
+        }
+
+        if(!updatedUser){
+            throw new NotFoundException("User not found");
+        }
+
+        return updatedUser;
     }
 
-    async deleteById(id: ObjectId): Promise<User>{
+    async deleteById(id: string): Promise<User>{
         
-        const user = await this.userModel.findByIdAndDelete(id);
+        let user;
+        try{
+            user = await this.userModel.findByIdAndDelete(id);
+        }
+        catch(err){
+            throw new BadRequestException("Bad id");
+        }
 
         if(!user){
             throw new NotFoundException("User not found");
         }
+
         return user;        
     }
 }
