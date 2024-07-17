@@ -3,8 +3,7 @@ import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
 
 @Schema({timestamps: true})
 export class User {
-
-  @Prop({type: mongoose.Schema.Types.ObjectId})
+	
   _id: ObjectId;
 
   @Prop({type: mongoose.Schema.Types.String})

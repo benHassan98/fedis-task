@@ -8,9 +8,9 @@ export class AuthController {
 
     constructor(private authService: AuthService){}
 
-    @Post("signin")
-    signin(@Body("username") username: string, @Body("password") password: string): Promise<any>{
-        return this.authService.signin(username, password);
+    @Post("login")
+    login(@Body("username") username: string, @Body("password") password: string): Promise<any>{
+        return this.authService.login(username, password);
     }
 
 

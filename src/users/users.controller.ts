@@ -16,7 +16,7 @@ export class UsersController {
         return this.userService.create(userDto);
     }
 
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Get()
     findAll(): Promise<User[]>{
         return this.userService.findAll();
