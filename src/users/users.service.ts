@@ -55,6 +55,12 @@ export class UsersService {
             throw new BadRequestException("Id should exist when updating user");
         }
 
+        if(userDto.password){
+            const salt = await bcrypt.genSalt(10);
+            userDto.password = await bcrypt.hash(userDto.password, salt);
+        }
+        
+
         let updatedUser;
         try{
             updatedUser = await this.userModel.findByIdAndUpdate(userDto.id, userDto);
